@@ -5,6 +5,7 @@ using eTickets.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,9 +27,24 @@ namespace eTickets.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var allMovies = await _service.GetAllAsync(n => n.Cinema);
+            var allMovies = await _service.GetAllAsync(
+                n => n.Cinema);
+          
+           
             return View(allMovies);
         }
+        [AllowAnonymous]
+        
+        public async Task<IActionResult> Movie(string name)
+        {
+            var allMovies = await _service.GetAllAsync(n => n.Cinema);
+
+            // Use LINQ to filter movies by category
+            var movies = allMovies.Where(m => m.MovieCategory.ToString() == name).ToList();
+
+            return View(movies);
+        }
+
 
         [AllowAnonymous]
         public async Task<IActionResult> Filter(string searchString)
